@@ -35,23 +35,29 @@
 				background: gray;
 				box-sizing: border-box;
 				color: white;
+				cursor: pointer;
 				display: flex;
 				flex-grow: 1;
 				justify-content: center;
 				margin: 0.1em;
+				opacity: 0.9;
 				padding: 0.5em;
 				text-align: center;
 				transform: translate3d(0, 0, 0);
 				word-wrap: break-word;
 			}
 
+			.service:hover {
+				opacity: 1;
+			}
+
 			.up {
-				background: hsl(150, 50%, 50%);
+				background: hsl(130, 70%, 40%);
 			}
 
 			.down {
 				animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) infinite both;
-				background: hsl(0, 60%, 55%);
+				background: hsl(0, 70%, 50%);
 			}
 
 			time {
@@ -87,18 +93,21 @@
 			fetch('http://localhost:3000')
 				.then(response => response.json())
 				.then(services => {
-					const divs = services.map(name => {
+					const serviceNames = Object.keys(services)
+					const divs = serviceNames.map(name => {
 						const element = document.createElement('div')
 						element.id = name
 						element.classList.add('service')
 						element.innerHTML = `${name} <time></time>`
+
+						element.addEventListener('click', _ => window.open(services[name], '_blank'))
 						return element
 					})
 					const documentFragment = document.createDocumentFragment()
 					divs.forEach(div => documentFragment.appendChild(div))
 					document.body.appendChild(documentFragment)
 
-					services.forEach(name => {
+					serviceNames.forEach(name => {
 						window.setInterval(() => {
 							updateServiceStatus(name)
 						}, 10000)

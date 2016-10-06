@@ -9,13 +9,13 @@ app.use((_, res, next) => {
 })
 
 app.get('/', function (req, res) {
-	res.json(Object.keys(services))
+	res.json(services)
 })
 
 Object.keys(services).forEach(serviceName => {
 	app.get(`/${serviceName}`, function (req, res) {
-		serviceUrl = services[serviceName]
-		http.get(serviceUrl, response => {
+		haproxyCsvUrl = `${services[serviceName]};csv;norefresh`
+		http.get(haproxyCsvUrl, response => {
 			var csv = ''
 			response.on('data', chunk => csv += chunk)
 			response.on('end', () => {
