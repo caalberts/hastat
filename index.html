@@ -54,6 +54,11 @@
 				background: hsl(0, 60%, 55%);
 			}
 
+			time {
+				margin-left: 0.25em;
+				opacity: 0.5;
+			}
+
 			@keyframes shake {
 				10%, 90% {
 					transform: translate3d(-1px, 0, 0) rotate(-1deg);
@@ -86,7 +91,7 @@
 						const element = document.createElement('div')
 						element.id = name
 						element.classList.add('service')
-						element.innerHTML = name
+						element.innerHTML = `${name} <time></time>`
 						return element
 					})
 					const documentFragment = document.createDocumentFragment()
@@ -108,11 +113,25 @@
 					const serviceUrl = `/${name}`
 					fetch(`http://localhost:3000${serviceUrl}`)
 						.then(response => response.status === 200 ? response.json() : {})
-						.then(isUp => {
+						.then(status => {
 							const element = document.querySelector(`#${name}`)
 							element.classList.remove('up', 'down')
-							element.classList.add(isUp ? 'up' : 'down')
+							element.classList.add(status.isUp ? 'up' : 'down')
+
+							const time = element.querySelector('time')
+							time.innerHTML = readableTime(status.time)
 						})
+				}
+
+				function readableTime(seconds) {
+					const minutes = seconds / 60
+					if (minutes < 60) return `${minutes.toFixed(1)}m`
+
+					const hours = minutes / 60
+					if (hours < 24) return `${hours.toFixed(1)}h`
+
+					const days = hours / 24
+					return `${days.toFixed(1)}d`
 				}
 		</script>
 	</body>
