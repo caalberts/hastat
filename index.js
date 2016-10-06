@@ -12,10 +12,7 @@ app.use((_, res, next) => {
 })
 
 app.get('/', function (req, res) {
-	res.json(Object.keys(services).reduce((memo, name) => {
-		memo[name] = `/${name}`
-		return memo
-	}, {}))
+	res.json(Object.keys(services))
 })
 
 Object.keys(services).forEach(serviceName => {

@@ -63,8 +63,7 @@
 			fetch('http://localhost:3000')
 				.then(response => response.json())
 				.then(services => {
-					const serviceNames = Object.keys(services)
-					const divs = serviceNames.map(name => {
+					const divs = services.map(name => {
 						const element = document.createElement('div')
 						element.id = name
 						element.innerHTML = name
@@ -74,17 +73,17 @@
 					divs.forEach(div => documentFragment.appendChild(div))
 					document.body.appendChild(documentFragment)
 
-					serviceNames.forEach(name => {
+					services.forEach(name => {
 						window.setInterval(() => {
-							updateServiceStatus(name, services)
+							updateServiceStatus(name)
 						}, 10000)
 
-						updateServiceStatus(name, services)
+						updateServiceStatus(name)
 					})
 				})
 
-				function updateServiceStatus(name, services) {
-					const serviceUrl = services[name]
+				function updateServiceStatus(name) {
+					const serviceUrl = `/${name}`
 					fetch(`http://localhost:3000${serviceUrl}`)
 						.then(response => response.status === 200 ? response.json() : {})
 						.then(isUp => {
