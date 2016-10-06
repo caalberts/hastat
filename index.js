@@ -24,7 +24,7 @@ Object.keys(services).forEach(serviceName => {
 		http.get(serviceUrl, response => {
 			response.on('data', csv => {
 				data = csv.toString().match(new RegExp(`^${serviceName},.+$`, 'm'))
-				if (!data || !data.length) return res.json().status(500)
+				if (!data || !data.length) return res.sendStatus(500)
 				const isUp = data[0].split(',')[17] === "UP"
 				res.json(isUp)
 			})

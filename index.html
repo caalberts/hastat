@@ -81,7 +81,7 @@
 				function updateServiceStatus(name, services) {
 					const serviceUrl = services[name]
 					fetch(`http://localhost:3000${serviceUrl}`)
-						.then(response => response.json())
+						.then(response => response.status === 200 ? response.json() : {})
 						.then(isUp => {
 							const element = document.querySelector(`#${name}`)
 							element.classList.remove('up', 'down')
