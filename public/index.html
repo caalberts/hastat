@@ -90,7 +90,7 @@
 			(Is the server running?)
 		</div>
 		<script>
-			fetch('http://localhost:3000')
+			fetch('/server')
 				.then(response => response.json())
 				.then(services => {
 					const serviceNames = Object.keys(services)
@@ -122,7 +122,7 @@
 					const boxElement = document.querySelector(`#${name}`)
 					const timeElement = boxElement.querySelector('time')
 
-					fetch(`http://localhost:3000/${name}`)
+					fetch(`/server/${name}`)
 						.then(response => response.json())
 						.then(status => {
 							boxElement.classList.remove('up', 'down')

@@ -3,17 +3,19 @@ var app = express()
 var http = require('http')
 var services = require('./services.json')
 
+app.use(express.static('public'))
+
 app.use((_, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*')
 	next()
 })
 
-app.get('/', function (req, res) {
+app.get('/server', function (req, res) {
 	res.json(services)
 })
 
 Object.keys(services).forEach(serviceName => {
-	app.get(`/${serviceName}`, function (req, res) {
+	app.get(`/server/${serviceName}`, function (req, res) {
 		haproxyCsvUrl = `${services[serviceName]};csv;norefresh`
 		http.get(haproxyCsvUrl, response => {
 			var csv = ''
