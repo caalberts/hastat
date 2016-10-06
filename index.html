@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>HAProxy Stats Aggregator</title>
+		<style>
+			body {
+				display: flex;
+				flex-wrap: wrap;
+				font-family: sans-serif;
+				font-weight: bold;
+			}
+
+			div {
+				background: gray;
+				box-sizing: border-box;
+				color: white;
+				height: 30vw;
+				line-height: 30vw;
+				margin: 0.5em;
+				padding: 0.5em;
+				text-align: center;
+				transform: translate3d(0, 0, 0);
+				width: 30vw;
+				word-wrap: break-word;
+			}
+
+			.up {
+				background: hsl(150, 50%, 50%);
+			}
+
+			.down {
+				animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) infinite both;
+				background: hsl(0, 60%, 55%);
+			}
+
+			@keyframes shake {
+				10%, 90% {
+					transform: translate3d(-1px, 0, 0) rotate(-1deg);
+				}
+
+				20%, 80% {
+					transform: translate3d(2px, 0, 0) rotate(0deg);
+				}
+
+				30%, 50%, 70% {
+					transform: translate3d(-4px, 0, 0) rotate(1deg);
+				}
+
+				40%, 60% {
+					transform: translate3d(4px, 0, 0) rotate(0deg);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+			fetch('http://localhost:3000')
+				.then(response => response.json())
+				.then(services => {
+					const serviceNames = Object.keys(services)
+					const divs = serviceNames.map(name => {
+						const element = document.createElement('div')
+						element.id = name
+						element.innerHTML = name
+						return element
+					})
+					const documentFragment = document.createDocumentFragment()
+					divs.forEach(div => documentFragment.appendChild(div))
+					document.body.appendChild(documentFragment)
+
+					serviceNames.forEach(name => {
+						window.setInterval(() => {
+							updateServiceStatus(name, services)
+						}, 10000)
+
+						updateServiceStatus(name, services)
+					})
+				})
+
+				function updateServiceStatus(name, services) {
+					const serviceUrl = services[name]
+					fetch(`http://localhost:3000${serviceUrl}`)
+						.then(response => response.json())
+						.then(isUp => {
+							const element = document.querySelector(`#${name}`)
+							element.classList.remove('up', 'down')
+							element.classList.add(isUp ? 'up' : 'down')
+						})
+				}
+		</script>
+	</body>
+</html>
