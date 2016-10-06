@@ -29,9 +29,10 @@ Object.keys(services).forEach(serviceName => {
 					time: time
 				})
 			})
-
-			response.on('error', e => console.log(e))
-		}).on('error', e => console.log(e))
+		}).on('error', e => {
+			console.log(e)
+			res.sendStatus(503)
+		})
 	})
 })
 
