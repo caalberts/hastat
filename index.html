@@ -119,16 +119,18 @@
 				})
 
 				function updateServiceStatus(name) {
-					const serviceUrl = `/${name}`
-					fetch(`http://localhost:3000${serviceUrl}`)
-						.then(response => response.status === 200 ? response.json() : {})
-						.then(status => {
-							const element = document.querySelector(`#${name}`)
-							element.classList.remove('up', 'down')
-							element.classList.add(status.isUp ? 'up' : 'down')
+					const boxElement = document.querySelector(`#${name}`)
+					const timeElement = boxElement.querySelector('time')
 
-							const time = element.querySelector('time')
-							time.innerHTML = readableTime(status.time)
+					fetch(`http://localhost:3000/${name}`)
+						.then(response => response.json())
+						.then(status => {
+							boxElement.classList.remove('up', 'down')
+							boxElement.classList.add(status.isUp ? 'up' : 'down')
+							timeElement.innerHTML = readableTime(status.time)
+						}, _ => {
+							boxElement.classList.remove('up', 'down')
+							timeElement.innerHTML = ''
 						})
 				}
 
