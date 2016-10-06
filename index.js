@@ -1,10 +1,7 @@
 var express = require('express')
 var app = express()
 var http = require('http')
-
-var services = {
-	'service_name': 'http://localhost:4000/stats;csv;norefresh'
-}
+var services = require('./services.json')
 
 app.use((_, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*')
