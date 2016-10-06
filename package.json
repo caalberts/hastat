@@ -1,7 +1,7 @@
 {
   "name": "hastat",
   "version": "0.0.0",
-  "description": "HAProxy stats page aggregator.",
+  "description": "HAProxy service status dashboard.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
