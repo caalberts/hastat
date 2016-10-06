@@ -19,7 +19,9 @@ Object.keys(services).forEach(serviceName => {
 	app.get(`/${serviceName}`, function (req, res) {
 		serviceUrl = services[serviceName]
 		http.get(serviceUrl, response => {
-			response.on('data', csv => {
+			var csv = ''
+			response.on('data', chunk => csv += chunk)
+			response.on('end', () => {
 				data = csv.toString().match(new RegExp(`^${serviceName},.+$`, 'm'))
 				if (!data || !data.length) return res.sendStatus(500)
 				const isUp = data[0].split(',')[17] === "UP"
