@@ -1,13 +1,13 @@
 {
-  "name": "hastat",
+  "name": "s3stat",
   "version": "0.0.0",
-  "description": "HAProxy service status dashboard.",
+  "description": "S3 asset status dashboard.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Sahil Bajaj",
+  "author": "Sahil Bajaj + Albert Salim",
   "license": "ISC",
   "dependencies": {
     "express": "^4.14.0"

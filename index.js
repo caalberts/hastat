@@ -1,7 +1,8 @@
 var express = require('express')
 var app = express()
-var http = require('http')
-var services = require('./services.json')
+var https = require('https')
+var assets = require('./assets.json')
+var status = {}
 
 app.use(express.static('public'))
 
@@ -11,25 +12,28 @@ app.use((_, res, next) => {
 })
 
 app.get('/server', function (req, res) {
-	res.json(services)
+	res.json(assets)
 })
 
-Object.keys(services).forEach(serviceName => {
-	app.get(`/server/${serviceName}`, function (req, res) {
-		haproxyCsvUrl = `${services[serviceName]};csv;norefresh`
-		http.get(haproxyCsvUrl, response => {
-			var csv = ''
-			response.on('data', chunk => csv += chunk)
-			response.on('end', () => {
-				data = csv.toString().match(new RegExp(`^${serviceName},.+$`, 'm'))
-				if (!data || !data.length) return res.sendStatus(500)
-				const fields = data[0].split(',')
-				const isUp = fields[17] === "UP"
-				const time = fields[23]
-				res.json({
-					isUp: isUp,
-					time: time
-				})
+Object.keys(assets).forEach(assetName => {
+	status[assetName] = {
+		isUp: false,
+		last_check: new Date().getTime()
+	}
+
+	app.get(`/server/${assetName}`, function (req, res) {
+		assetUrl = `${assets[assetName]}`
+		https.get(assetUrl, response => {
+			const isUp = response.statusCode === 200
+			if (status[assetName].isUp !== isUp) {
+				status[assetName].isUp = isUp
+				status[assetName].last_check = new Date().getTime()
+			}
+			const time = (new Date().getTime() - status[assetName].last_check) / 1000
+
+			res.json({
+				isUp: isUp,
+				time: time
 			})
 		}).on('error', e => {
 			console.log(e)
@@ -38,6 +42,6 @@ Object.keys(services).forEach(serviceName => {
 	})
 })
 
-app.listen(3000, function () {
-	console.log('Listening on 3000')
+app.listen(3001, function () {
+	console.log('Listening on 3001')
 })

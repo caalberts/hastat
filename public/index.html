@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>hastat</title>
+		<title>s3stat</title>
 		<style>
 			body {
 				bottom: 0;
@@ -86,39 +86,39 @@
 	</head>
 	<body class="is-loading">
 		<div class="loading-message">
-			No services found.<br>
+			No assets found.<br>
 			(Is the server running?)
 		</div>
 		<script>
 			fetch('/server')
 				.then(response => response.json())
-				.then(services => {
-					const serviceNames = Object.keys(services)
-					const divs = serviceNames.map(name => {
+				.then(assets => {
+					const assetNames = Object.keys(assets)
+					const divs = assetNames.map(name => {
 						const element = document.createElement('div')
 						element.id = name
 						element.classList.add('service')
 						element.innerHTML = `${name} <time></time>`
 
-						element.addEventListener('click', _ => window.open(services[name], '_blank'))
+						element.addEventListener('click', _ => window.open(assets[name], '_blank'))
 						return element
 					})
 					const documentFragment = document.createDocumentFragment()
 					divs.forEach(div => documentFragment.appendChild(div))
 					document.body.appendChild(documentFragment)
 
-					serviceNames.forEach(name => {
+					assetNames.forEach(name => {
 						window.setInterval(() => {
-							updateServiceStatus(name)
+							updateAssetStatus(name)
 						}, 10000)
 
-						updateServiceStatus(name)
+						updateAssetStatus(name)
 					})
 
 					document.body.classList.remove('is-loading')
 				})
 
-				function updateServiceStatus(name) {
+				function updateAssetStatus(name) {
 					const boxElement = document.querySelector(`#${name}`)
 					const timeElement = boxElement.querySelector('time')
 
